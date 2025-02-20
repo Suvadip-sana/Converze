@@ -18,9 +18,9 @@ import CommentIcon from '@mui/icons-material/Comment';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import server from '../environment';
 
-
-const server_url = "http://localhost:7000";
+const server_url = server;
 
 let connections = {};
 
