@@ -29,7 +29,7 @@ export default function history() {
                 setMeetings(history);
 
             } catch (err) {
-                console.log(err.response.data);
+                console.error(err);
                 let message = "Faild to fetch the history!";
                 if (err.response) {
                     message = err.response.data.message; // Normal error catch up
@@ -49,10 +49,9 @@ export default function history() {
         try {
             const result = await clearHistory();
             setMeetings([])
-            console.log("Delete: ", result);
 
         } catch (err) {
-            console.log(err.response.data);
+            console.error(err);
             let message = "Faild to delete the history!";
             if (err.response) {
                 message = err.response.data.message; // Normal error catch up
