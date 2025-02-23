@@ -9,7 +9,7 @@ import server from "../environment";
 export const Authcontext = createContext({});
 
 const client = axios.create({
-    baseURL: `${server}/api/v1/users`,
+    baseURL: `${server}/api/v2/users`,
     headers: {
         'Content-Type': 'application/json'
     }
