@@ -37,7 +37,7 @@ function homeComponent() {
         try {
             const result = await addToUserHistory(meetingCode);
         } catch (err) {
-            console.log(err.response.data);
+            console.error(err);
             let message = "Faild to update history!";
             if (err.response) {
                 message = err.response.data.message; // Normal error catch up
