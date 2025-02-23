@@ -57,7 +57,7 @@ export default function Authentication() {
             // console.log(err.message);
             // return;
 
-            console.error(err.response.data);
+            console.error(err);
             let message = "An unexpected error occured!";
             if (err.response) {
                 // Handle HTML responses from 404 errors
