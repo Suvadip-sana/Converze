@@ -99,7 +99,7 @@ const videoMeetComponent = () => {
             }
 
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 
@@ -117,7 +117,7 @@ const videoMeetComponent = () => {
             window.localStream.getTracks().forEach(track => track.stop()) // First clear all previous track of audio video
 
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
 
         window.localStream = stream; // After that new stream was initialized.
@@ -135,7 +135,7 @@ const videoMeetComponent = () => {
                     .then(() => {
                         socketRef.current.emit("signal", id, JSON.stringify({ "sdp": connections[id].localDescription }))
                     })
-                    .catch(e => console.log(e));
+                    .catch(e => console.error(e));
             })
 
         }
@@ -147,31 +147,31 @@ const videoMeetComponent = () => {
 
             try {
                 let tracks = localVideoRef.current.srcObject.getTracks();
-                console.log("Tracks: ", tracks);
+                // console.log("Tracks: ", tracks);
 
                 tracks.forEach(track => track.stop())
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
 
 
             // TODO BlackSilence
 
             let blackSlience = (...args) => new MediaStream([black(...args), silence()]);
-            console.log("Black Slience: ", blackSlience);
+            // console.log("Black Slience: ", blackSlience);
             window.localStream = blackSlience();
             localVideoRef.current.srcObject = window.localStream;
 
 
 
             for (let id in connections) {
-                console.log("Connections ID :", connections[id]);
+                // console.log("Connections ID :", connections[id]);
                 connections[id].addStream(window.localStream);
                 connections[id].createOffer().then((description) => {
                     connections[id].setLocalDescription(description)
                         .then(() => {
                             socketRef.current.emit("signal", id, JSON.stringify({ "sdp": connections[id].localDescription }))
-                        }).catch(e => console.log(e));
+                        }).catch(e => console.error(e));
                 })
             }
         });
@@ -210,14 +210,14 @@ const videoMeetComponent = () => {
                 .then(getUserMediaSuccess) // Will be done latter ---> Get user media success
                 .then((stream) => { })
                 .catch((e) => {
-                    console.log(e);
+                    console.error(e);
                 })
         } else {
             try {
                 let tracks = localVideoRef.current.srcObject.getTracks();
                 tracks.forEach(track => track.stop());
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         }
     }
@@ -244,15 +244,15 @@ const videoMeetComponent = () => {
                             connections[fromId].createAnswer().then((description) => {
                                 connections[fromId].setLocalDescription(description).then(() => {
                                     socketRef.current.emit("signal", fromId, JSON.stringify({ "sdp": connections[fromId].localDescription }))
-                                }).catch(e => console.log(e));
-                            }).catch(e => console.log(e));
+                                }).catch(e => console.error(e));
+                            }).catch(e => console.error(e));
                         }
-                    }).catch(e => console.log(e));
+                    }).catch(e => console.error(e));
             }
 
             if (signal.ice) {
                 // console.log("Ice: ", signal.ice)
-                connections[fromId].addIceCandidate(new RTCIceCandidate(signal.ice)).catch(e => console.log(e));
+                connections[fromId].addIceCandidate(new RTCIceCandidate(signal.ice)).catch(e => console.error(e));
             }
         }
     }
@@ -261,9 +261,9 @@ const videoMeetComponent = () => {
     // TODO
     let addMessage = (data, sender, socketIdSender) => {
 
-        console.log("Data: ",data);
-        console.log("Sende: ", sender);
-        console.log("Socket id sender: ", socketIdSender);
+        // console.log("Data: ",data);
+        // console.log("Sende: ", sender);
+        // console.log("Socket id sender: ", socketIdSender);
         
         setMessages((prevMessages) => [
             ...prevMessages,
@@ -371,7 +371,7 @@ const videoMeetComponent = () => {
                                     socketRef.current.emit("signal", idto, JSON.stringify({ "sdp": connections[idto].localDescription })) // This generate an letter and send it back to the peer to established the WebRTC connection. This is an crucial part.
                                 })
                                 .catch((err) => {
-                                    console.log(err);
+                                    console.error(err);
                                 });
 
                         })
@@ -413,7 +413,7 @@ const videoMeetComponent = () => {
         try {
             window.localStream.getTracks().forEach(track => track.stop())
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
 
         window.localStream = stream;
@@ -429,7 +429,7 @@ const videoMeetComponent = () => {
                         socketRef.current.emit("signal", id, JSON.stringify({ "sdp": connections[id].localDescription }))
                     })
                     .catch((error) => {
-                        console.log(error);
+                        console.error(error);
                     })
             ])
         }
@@ -442,7 +442,7 @@ const videoMeetComponent = () => {
                 let tracks = localVideoRef.current.srcObject.getTracks();
                 tracks.forEach(track => track.stop())
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
 
 
@@ -466,7 +466,7 @@ const videoMeetComponent = () => {
                 navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
                     .then(getDisplayMediaSuccess)
                     .then((stream) => { })
-                    .catch(e => console.log(e))
+                    .catch(e => console.error(e))
             }
         }
     }
@@ -486,7 +486,7 @@ const videoMeetComponent = () => {
             let tracks = localVideoRef.current.srcObject.getTracks();
             tracks.forEach(track => track.stop());
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
 
         routeTo("/home");
