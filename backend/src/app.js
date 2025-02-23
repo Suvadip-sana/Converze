@@ -38,7 +38,7 @@ app.get("/", (req, res) => {
     res.send("Work fine!")
 });
 
-app.use("/api/v1/users", userRoutes); // Append the user route in main server.
+app.use("api/v1/users", userRoutes); // Append the user route in main server.
 
 
 server.listen(port, ()=> {
