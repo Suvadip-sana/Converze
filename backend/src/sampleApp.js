@@ -1,10 +1,14 @@
+import dotenv from "dotenv"; // ✅ ES Modules syntax
+if (process.env.NODE_ENV !== "production") {
+    dotenv.config(); // Load .env file
+}
 import express from "express";
 import {createServer} from "node:http"; // Helsp to connect 'socket.io' and the 'express' server because this two are different server initially
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import cors from "cors";
 const port = process.env.PORT || 7000;
-const dburl = process.env.DB_URL || 'mongodb+srv://suvadipsana19:V3u3Uc3ppjXdJ1kb@cluster0.sf4zg.mongodb.net/';
+const dburl = process.env.DB_URL;
 
 
 
