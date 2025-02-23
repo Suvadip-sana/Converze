@@ -60,7 +60,10 @@ export default function Authentication() {
             console.error(err.response.data);
             let message = "An unexpected error occured!";
             if (err.response) {
-                message = err.response.data.message; // Normal error catch up
+                // Handle HTML responses from 404 errors
+                message = typeof err.response.data === 'string'
+                    ? "Endpoint not found"
+                    : err.response.data.message;
             } else if (err.message) {
                 message = err.message; // Special hande to catch "Network error"
             }
@@ -100,7 +103,7 @@ export default function Authentication() {
                             }
                         }}
                     >
-                        <ArrowBackIcon fontSize='medium'/>
+                        <ArrowBackIcon fontSize='medium' />
                     </IconButton>
 
                     <Box
