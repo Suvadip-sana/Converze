@@ -75,7 +75,7 @@
     position: absolute;
     height: 88vh;
     margin-top: 1rem;
-    width: 25vw;
+    width: 350px;
     right: 1vw;
     background-color: #ffffff;
     backdrop-filter: blur(20px);
@@ -83,6 +83,7 @@
     border-radius: 0.3rem;
     bottom: 10vh;
     padding: 0.4rem 0.5rem 0.5rem 0.5rem;
+    z-index: 999;
 }
 .chatContainer{
     position: relative;
@@ -296,4 +297,18 @@
 }
 .lobbyTextfield{
     color: #5e49c8 !important;
+}
+@media(max-width: 400px) {
+    .chatWindow{
+        width: 85vw;
+    }
+}
+@media(max-width: 900px){
+    .lobby{
+        flex-direction: column;
+    }
+    .lobby .lobbyVideodiv .lobbyVideo{
+        width: 21rem;
+        height: auto;
+    }
 }
