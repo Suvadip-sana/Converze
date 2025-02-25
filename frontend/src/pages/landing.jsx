@@ -33,7 +33,7 @@ export default function landing() {
   return (
     <div className="landing-page-container">
 
-      <nav>
+      <nav className="nav-outer">
         <div className="nav-header">
           <h2>Converze</h2>
         </div>
@@ -56,7 +56,7 @@ export default function landing() {
         <div className="left">
           <h2><span>Connect</span> with your loved Ones</h2>
           <p>Cover a distance by Converze</p>
-          <div role="button" onClick={handleGetStarted}>
+          <div role="button" className="started-btn" onClick={handleGetStarted}>
             <p>Get Started</p>
           </div>
         </div>
