@@ -91,7 +91,7 @@
 .landing-main-container .left{
     font-size: 2.2rem;
 }
-.landing-main-container > div:nth-child(1) div[role='button']{
+.landing-main-container .left .started-btn{
     background: linear-gradient(to top right, #9274fd, #5e49c8);
     width: fit-content;
     padding: 1rem 1.3rem;
@@ -103,10 +103,10 @@
     cursor: pointer;
     transition: all 0.2s ease;
 }
-.landing-main-container > div:nth-child(1) div[role='button']:hover{
+.landing-main-container .left .started-btn:hover{
     opacity: 0.8;
 }
-.landing-main-container > div:nth-child(1) div[role='button'] p {
+.landing-main-container .left .started-btn {
     text-decoration: none;
     color: white;
     font-size: 1.5rem !important;
@@ -263,6 +263,7 @@
     height: 80vh;
     gap: 10vw;
     justify-content: center;
+    flex-direction: row;
 }
 .meet-container 
 .left-side-panel{
@@ -307,4 +308,74 @@
     color: rgb(117, 117, 117) !important;
     font-size: 2rem;
     font-weight: 700;
+}
+@media(max-width: 900px){
+    .meet-container{
+        flex-direction: column;
+        align-items: center;
+        margin-top: 3rem;
+    }
+    .meet-container .right-side-panel > img{
+        width: 22rem;
+        height: auto;
+    }
+    .landing-main-container .right img{
+        height: 45vh;
+    }
+}
+@media(max-width: 780px){
+    .display-his .inner-div .no-history img {
+        width: 15rem;
+        height: auto;
+    }
+    .landing-main-container .right img{
+        height: 45vh;
+    }
+    .landing-main-container .left{
+        font-size: 1.5rem;
+    }
+}
+@media(max-width: 715px){
+    .landing-main-container{
+        flex-direction: column;
+    }
+}
+@media(max-width: 625px){
+    .landing-main-container .right img{
+        width: auto;
+        margin-top: 1.5rem;
+        height: 35vh;
+    }
+    .nav-outer{
+        display: flex;
+        flex-direction: column;
+        padding: 1rem !important;
+    }
+    .landing-page-container .nav-outer .nav-header {
+        display: flex;
+        justify-content: flex-start !important;
+        width: 100%;
+    }
+    .landing-page-container nav .nav-lists{
+        justify-content: flex-start;
+    }
+    .landing-page-container nav 
+    .nav-lists p{
+        font-size: 1rem;
+    }
+    .landing-page-container .landing-main-container .started-btn{
+        padding: 0.7rem 1rem !important;
+        margin-top: 1.2rem;
+    }
+    .landing-page-container .landing-main-container .started-btn p{
+        font-size: 1.2rem;
+    }
+}
+@media(max-width: 515px){
+    .navbar{
+        flex-direction: column;
+    }
+    .navbar-second-div{
+        margin-top: 0.5rem;
+    }
 }
