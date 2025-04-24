@@ -30,15 +30,15 @@ app.use(express.urlencoded({extended: true}));
 
 
 // Serve static files from the React/Vue build folder
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 
-console.log('Resolved build path:', path.join(__dirname, '../client/build'));
+console.log('Resolved build path:', path.join(__dirname, 'client/build'));
 
 
 // Catch-all route to serve index.html for client-side routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
 
 async function connectMong(){
