@@ -9,6 +9,8 @@ import {Server} from "socket.io";
 import cors from 'cors';
 import { connectToSocket } from "./controllers/socket.manager.js"
 import userRoutes from "./routes/user.routes.js";
+import path from 'path';
+const __dirname = path.resolve();
 
 
 const port = process.env.PORT || 7000;
@@ -25,6 +27,15 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+
+// Serve static files from the React/Vue build folder
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+// Catch-all route to serve index.html for client-side routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
 
 async function connectMong(){
     await mongoose.connect(dburl);
