@@ -10,9 +10,9 @@ import cors from 'cors';
 import { connectToSocket } from "./controllers/socket.manager.js"
 import userRoutes from "./routes/user.routes.js";
 import path from 'path';
+import fs from 'fs';
+
 const __dirname = path.resolve();
-
-
 const port = process.env.PORT || 7000;
 const dburl = process.env.DB_URL
 
