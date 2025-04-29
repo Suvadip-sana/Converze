@@ -28,31 +28,39 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+// app.use("/api/v1/users", userRoutes); // Append the user route in main server.
+app.use("/api/v2/users", userRoutes); // Append the user route in main server.
 
 // Serve static files from the React/Vue build folder
 app.use(express.static(path.join(__dirname, 'client/build')));
-
-
 console.log('Resolved build path:', path.join(__dirname, 'client/build'));
 
 
 // Catch-all route to serve index.html for client-side routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+//   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+
+const indexPath = path.join(__dirname, 'client/build', 'index.html');
+  console.log('Checking index.html at:', indexPath);
+
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    console.error('index.html MISSING at:', indexPath);
+    res.status(500).send('Frontend build missing!');
+  }
+
 });
 
 async function connectMong(){
     await mongoose.connect(dburl);
 };
 
-connectMong().then(()=> {
-    console.log("Connection successfull!");
-}).catch((err) => {
-    console.log("Faild to connect with DB, error: ", err);
-});
+connectMong()
+    .then(()=> console.log("Connection successfull!"))
+    .catch((err) => console.log("Faild to connect with DB, error: ", err));
 
-// app.use("/api/v1/users", userRoutes); // Append the user route in main server.
-app.use("/api/v2/users", userRoutes); // Append the user route in main server.
+
 
 server.listen(port, ()=> {
     console.log("Server listening on port: ", port);
