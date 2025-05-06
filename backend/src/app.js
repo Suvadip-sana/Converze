@@ -20,12 +20,19 @@ const app = express();
 const server = createServer(app); // The ocket server and the express instance is different, So here might be something to conect both, So here comes 'createServer'
 const io = connectToSocket(server);
 
+// CORS configuration
 app.use(
   cors({
-    origin: "https://converze.onrender.com, http://localhost:5173",
+    origin: "https://converze.onrender.com",
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// Handle preflight requests
+app.options("*", cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
