@@ -23,7 +23,7 @@ const io = connectToSocket(server);
 // CORS configuration
 app.use(
   cors({
-    origin: "https://converze.onrender.com",
+    origin: "https://converze.onrender.com, http://localhost:5173",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],

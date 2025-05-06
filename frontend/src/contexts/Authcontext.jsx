@@ -12,7 +12,8 @@ const client = axios.create({
     baseURL: `${server}/api/v2/users`,
     headers: {
         'Content-Type': 'application/json'
-    }
+    },
+    credentials: true
 })
 
 export const Authprovider = ({children}) => {
