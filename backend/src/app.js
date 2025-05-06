@@ -32,8 +32,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Use dynamic path resolution
 const staticPath = process.env.NODE_ENV === 'production' 
-  ? path.join(__dirname, 'client/build') // Render path
-  : path.join(__dirname, '../frontend/build'); // Local path
+  ? path.join(__dirname, 'client/dist') // Render path
+  : path.join(__dirname, 'frontend/dist'); // Local path
 
 // Serve static files from the React/Vue build folder
 app.use(express.static(staticPath));
