@@ -22,7 +22,7 @@ const io = connectToSocket(server);
 
 app.use(
   cors({
-    origin: "*",
+    origin: "https://converze.onrender.com",
     credentials: true,
   })
 );
