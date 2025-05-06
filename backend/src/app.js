@@ -22,16 +22,22 @@ const io = connectToSocket(server);
 
 app.use(
   cors({
-    origin: "https://converze.onrender.com",
+    origin: "https://converze.onrender.com, http://localhost:5173",
     credentials: true,
   })
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+// Use dynamic path resolution
+const staticPath = process.env.NODE_ENV === 'production' 
+  ? path.join(__dirname, 'client/dist') // Render path
+  : path.join(__dirname, '../frontend/dist'); // Local path
+
 // Serve static files from the React/Vue build folder
-app.use(express.static(path.join(__dirname, "../frontend/build")));
-console.log("Resolved build path:", path.join(__dirname, "../frontend/build"));
+app.use(express.static(staticPath));
+console.log("Resolved build path:", staticPath);
 
 // app.use("/api/v1/users", userRoutes); // Append the user route in main server.
 app.use("/api/v2/users", userRoutes); // Append the user route in main server.
@@ -40,7 +46,7 @@ app.use("/api/v2/users", userRoutes); // Append the user route in main server.
 app.get("*", (req, res) => {
   //   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 
-  const indexPath = path.join(__dirname, "../frontend/build", "index.html");
+  const indexPath = path.join(staticPath, "index.html");
   console.log("Checking index.html at:", indexPath);
 
   if (fs.existsSync(indexPath)) {
