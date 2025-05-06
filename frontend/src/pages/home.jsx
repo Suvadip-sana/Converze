@@ -58,10 +58,6 @@ function homeComponent() {
                 </div>
 
                 <div className='navbar-second-div'>
-                    {/* <IconButton>
-                        <RestoreIcon />
-                        <small>History</small>
-                    </IconButton> */}
 
                     <Button className='back-btn' variant="outlined" size="small" onClick={() => navigate("/")} startIcon={<ArrowBackIcon />}>
                         Back
@@ -75,6 +71,7 @@ function homeComponent() {
                         localStorage.removeItem("token");
                         localStorage.removeItem("id");
                         localStorage.removeItem("user");
+                        enqueueSnackbar("You are logged out now!", { variant: "success" });
                         navigate("/auth");
                     }}>
                         Logout

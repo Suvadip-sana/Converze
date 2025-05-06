@@ -489,7 +489,7 @@ const videoMeetComponent = () => {
             console.error(error);
         }
 
-        routeTo("/home");
+        window.location.href = "/home"; // This forces a full page reload
     }
 
 

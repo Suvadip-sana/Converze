@@ -11,6 +11,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 export default function history() {
 
@@ -48,6 +50,7 @@ export default function history() {
     const deleteHistory = async () => {
         try {
             const result = await clearHistory();
+            enqueueSnackbar(result.data.message || "History cleared successfully!", { variant: "success" });
             setMeetings([])
 
         } catch (err) {
@@ -70,7 +73,16 @@ export default function history() {
         const month = (date.getMonth() + 1).toString().padStart(2, "0")
         const year = date.getFullYear();
 
-        return `${day}.${month}.${year}`
+        let hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, "0");
+
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12; // Convert 0 -> 12 for 12 AM
+
+        const formattedDate = `${day}.${month}.${year}`;
+        const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes} ${ampm}`;
+
+        return { formattedDate, formattedTime };
 
     }
 
@@ -85,9 +97,7 @@ export default function history() {
                 <div className='history-home'>
                     {
                         (meetings.length > 0) ?
-                            // <IconButton onClick={deleteHistory} className='home-btn'>
-                            //     <DeleteIcon className='home-icon' />
-                            // </IconButton>
+
                             <Button className='history-delete-btn' onClick={deleteHistory} variant="contained" size="small" startIcon={<DeleteIcon />}>
                                 Clear all
                             </Button>
@@ -103,45 +113,63 @@ export default function history() {
 
             <div className='display-his'>
                 <div className='inner-div'>
-                {
-                    (meetings.length !== 0) ? meetings.map((element, indx) => {
-                        return (
-                            // <React.Fragment key={indx}>
-                            //     <div>
-                            //         <p>Code: {element.meetingcode}</p>
-                            //         <span>Date: {formatDate(element.date)}</span>
-                            //     </div>
-                            //     <hr />
-                            // </React.Fragment>
+                    {
+                        (meetings.length !== 0) ? meetings.map((element, indx) => {
 
-                            <Card key={indx} variant="outlined" className='his-card'>
+                            const { formattedDate, formattedTime } = formatDate(element.date);
+
+                            return (
+
+                                <Card key={indx} variant="outlined" className='his-card'>
 
 
-                                <CardContent className='his-box'>
-                                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                        Meeting Code: <span>{element.meetingcode}</span>
-                                    </Typography>
+                                    <CardContent className='his-box'>
+                                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            Meeting Code: <span>{element.meetingcode}</span>
+                                        </Typography>
 
-                                    <Typography sx={{ fontSize: 14 }} color="text.secondary">
-                                        Date: <span>{formatDate(element.date)}</span>
-                                    </Typography>
+                                        <div className='his-inner-div'>
 
-                                </CardContent>
+                                            <Typography sx={{
+                                                fontSize: 10,
+                                                color: "text.secondary",
+                                                display: "flex",
+                                                alignItems: "center",  // vertically center icon and text
+                                                gap: 0.5,
+                                            }}
+                                            >
+                                                <CalendarMonthIcon className='his-icon' /> <span>{formattedDate}</span>
+                                            </Typography>
+
+                                            <Typography sx={{
+                                                fontSize: 10,
+                                                color: "text.secondary",
+                                                display: "flex",
+                                                alignItems: "center",  // vertically center icon and text
+                                                gap: 0.5,
+                                            }}
+                                            >
+                                                <AccessTimeIcon className='his-icon' /> <span>{formattedTime}</span>
+                                            </Typography>
+
+                                        </div>
+
+                                    </CardContent>
 
 
-                            </Card>
-                        )
-                    })
+                                </Card>
+                            )
+                        })
 
-                        :
+                            :
 
-                        <>
-                            <div className='no-history'>
-                                <img srcSet="/notfound1.png" alt="" />
-                                <p>No History Found!</p>
-                            </div>
-                        </>
-                }
+                            <>
+                                <div className='no-history'>
+                                    <img srcSet="/notfound1.png" alt="" />
+                                    <p>No History Found!</p>
+                                </div>
+                            </>
+                    }
                 </div>
             </div>
         </>

@@ -209,6 +209,15 @@
     border: 1px solid #5e49c84c;
     margin-block: 0.3rem;
 }
+.display-his .his-card .his-icon{
+    color: #969696cb !important;
+    font-size: 1rem !important;
+}
+.display-his .his-card .his-inner-div{
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
 .display-his .inner-div .his-box{
     display: flex;
     justify-content: space-between;

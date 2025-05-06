@@ -47,7 +47,6 @@ const staticPath = process.env.NODE_ENV === 'production'
 
 // Serve static files from the React/Vue build folder
 app.use(express.static(staticPath));
-console.log("Resolved build path:", staticPath);
 
 // app.use("/api/v1/users", userRoutes); // Append the user route in main server.
 app.use("/api/v2/users", userRoutes); // Append the user route in main server.
@@ -57,7 +56,6 @@ app.get("*", (req, res) => {
   //   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 
   const indexPath = path.join(staticPath, "index.html");
-  console.log("Checking index.html at:", indexPath);
 
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
