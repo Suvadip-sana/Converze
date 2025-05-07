@@ -54,7 +54,10 @@ function homeComponent() {
         <>
             <div className="navbar">
                 <div className='navbar-first-div'>
-                    <h2>Converz</h2>
+                    {/* <img className='nav-logo' srcSet="/converze.png" alt="" /> */}
+                    <span>C</span>
+                    <img className='o-logo' srcSet="/t-logo4.png" alt="" />
+                    <span>nverz</span>
                 </div>
 
                 <div className='navbar-second-div'>

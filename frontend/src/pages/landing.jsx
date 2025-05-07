@@ -19,7 +19,7 @@ export default function landing() {
   };
 
   const handleGetStarted = () => {
-    if(isAuthenticated){
+    if (isAuthenticated) {
       router("/home");
     } else {
       router("/auth");
@@ -35,18 +35,23 @@ export default function landing() {
 
       <nav className="nav-outer">
         <div className="nav-header">
-          <h2>Converze</h2>
+          {/* <img className="l-page-nav-logo" srcSet="/converze.png" alt="" /> */}
+          {/* <h2>Converze</h2> */}
+          <span>C</span>
+          <img className='o-logo' srcSet="/t-logo4.png" alt="" />
+          <span>nverz</span>
+          {/* <img className="gif" src="/gif.gif" alt=""></img> */}
         </div>
         <div className="nav-lists">
           <p onClick={handleGuest}>Join as Guest</p>
-          <p onClick={() => { router("/auth")}} >Register</p>
-          { isAuthenticated ? 
+          <p onClick={() => { router("/auth") }} >Register</p>
+          {isAuthenticated ?
             <div role="button" className="login-btn">
               <p onClick={handleLogOut}>Log out</p>
             </div>
-          :
+            :
             <div role="button" className="login-btn">
-              <p onClick={() => { router("/auth")}} >Log in</p>
+              <p onClick={() => { router("/auth") }} >Log in</p>
             </div>
           }
         </div>
@@ -64,7 +69,7 @@ export default function landing() {
           <img src="/mobiles.png" alt="" />
         </div>
       </div>
-      
+
     </div>
   )
 }

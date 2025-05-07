@@ -9,21 +9,36 @@
 }
 .landing-page-container nav{
     padding-inline: 2rem;
-    padding-block: 2rem;
+    padding-block: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.landing-page-container nav h2{
+.landing-page-container nav span{
     font-weight: 600;
-    font-size: 1.8rem;
+    font-size: 2.7rem;
     background: linear-gradient(to bottom right, #b29dff, #3c2a85);
     background-clip: text;
     -webkit-text-fill-color: transparent;
 }
-/* .nav-header{
-
-} */
+.landing-page-container .nav-outer .nav-header .o-logo{
+    height: 1.6rem;
+    margin-bottom: 0 !important;
+    margin-inline: 2px;
+}
+.landing-page-container .nav-outer .nav-header .gif{
+    height: 3rem;
+    margin-left: 1rem;
+}
+.landing-page-container .nav-outer .nav-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.landing-page-container .nav-outer .nav-header .l-page-nav-logo{
+    height: 3.2rem;
+    margin-right: 0.5rem;
+}
 .landing-page-container nav .nav-lists{
     display: flex;
     gap: 1.6rem;
@@ -163,7 +178,7 @@
     background: #e2e2e2;
 }
 .history-navbar{
-    padding: 1.2rem 2rem;
+    padding: 1.3rem 2rem;
 }
 .history-navbar .history-home 
 .home-btn{
@@ -240,11 +255,21 @@
     display: flex;
     align-items: center;
 }
-.navbar 
-.navbar-first-div h2{
+.navbar .navbar-first-div span{
     background: linear-gradient(to bottom right, #b29dff, #3c2a85);
     background-clip: text;
+    font-size: 1.8rem;
+    font-weight: 700;
     -webkit-text-fill-color: transparent;
+}
+.navbar .navbar-first-div .nav-logo {
+    height: 2rem; /* adjust as needed */
+    margin-right: 0.5rem;
+    object-fit: contain;
+}
+.navbar .navbar-first-div .o-logo{
+    height: 1.1rem;
+    margin-inline: 2px;
 }
 .navbar 
 .navbar-second-div 
