@@ -44,8 +44,8 @@ export default function Authentication() {
                 let result = await handleRegister(name, username, password);
                 enqueueSnackbar(result || "Registration successful!", { variant: "success" });
                 setFormState(0);
-                setUsername('');
-                setPassword('');
+                setUsername(username);
+                setPassword(password);
                 setName('');
                 setError('');
             }
