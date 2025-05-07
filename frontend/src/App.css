@@ -34,6 +34,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer !important;
 }
 .landing-page-container .nav-outer .nav-header .l-page-nav-logo{
     height: 3.2rem;
@@ -250,6 +251,9 @@
     margin-left: 1rem;
     margin-right: 1.5rem;
 }
+.navbar .navbar-first-div{
+    cursor: pointer;
+}
 .navbar .navbar-first-div,
 .navbar .navbar-second-div{
     display: flex;
@@ -389,6 +393,7 @@
         display: flex;
         justify-content: flex-start !important;
         width: 100%;
+        cursor: pointer !important;
     }
     .landing-page-container nav .nav-lists{
         justify-content: flex-start;

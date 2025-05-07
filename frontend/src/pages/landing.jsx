@@ -34,7 +34,7 @@ export default function landing() {
     <div className="landing-page-container">
 
       <nav className="nav-outer">
-        <div className="nav-header">
+        <div className="nav-header" onClick={() => { router("/") }}>
           {/* <img className="l-page-nav-logo" srcSet="/converze.png" alt="" /> */}
           {/* <h2>Converze</h2> */}
           <span>C</span>

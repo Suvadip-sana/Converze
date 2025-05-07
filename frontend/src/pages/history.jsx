@@ -90,7 +90,7 @@ export default function history() {
     return (
         <>
             <div className="navbar history-navbar">
-                <div className='navbar-first-div'>
+                <div className='navbar-first-div' onClick={() => { navigate("/") }}>
                     {/* <img className='nav-logo' srcSet="/converze.png" alt="" /> */}
                     <span>C</span>
                     <img className='o-logo' srcSet="/t-logo4.webp" alt="" />
