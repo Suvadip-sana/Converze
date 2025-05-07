@@ -38,7 +38,7 @@ export default function landing() {
           {/* <img className="l-page-nav-logo" srcSet="/converze.png" alt="" /> */}
           {/* <h2>Converze</h2> */}
           <span>C</span>
-          <img className='o-logo' srcSet="/t-logo4.png" alt="" />
+          <img className='o-logo' srcSet="/t-logo4.webp" alt="" />
           <span>nverz</span>
           {/* <img className="gif" src="/gif.gif" alt=""></img> */}
         </div>
