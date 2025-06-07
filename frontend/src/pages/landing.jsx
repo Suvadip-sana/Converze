@@ -38,7 +38,7 @@ export default function landing() {
           {/* <img className="l-page-nav-logo" srcSet="/converze.png" alt="" /> */}
           {/* <h2>Converze</h2> */}
           <span>C</span>
-          <img className='o-logo' srcSet="/t-logo4.webp" alt="" />
+          <img className='o-logo' srcSet="/t-logo.avif" alt="" />
           <span>nverz</span>
           {/* <img className="gif" src="/gif.gif" alt=""></img> */}
         </div>
@@ -66,7 +66,7 @@ export default function landing() {
           </div>
         </div>
         <div className="right">
-          <img src="/mobiles.png" alt="" />
+          <img src="/mobiles.avif" alt="" />
         </div>
       </div>
 

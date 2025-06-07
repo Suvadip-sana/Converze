@@ -56,7 +56,7 @@ function homeComponent() {
                 <div className='navbar-first-div' onClick={() => { navigate("/") }}>
                     {/* <img className='nav-logo' srcSet="/converze.png" alt="" /> */}
                     <span>C</span>
-                    <img className='o-logo' srcSet="/t-logo4.webp" alt="" />
+                    <img className='o-logo' srcSet="/t-logo.avif" alt="" />
                     <span>nverz</span>
                 </div>
 
@@ -112,7 +112,7 @@ function homeComponent() {
                 </div>
 
                 <div className="right-side-panel">
-                    <img srcSet="/logo4.png" alt="" />
+                    <img srcSet="/logo.avif" alt="" />
                 </div>
 
             </div>

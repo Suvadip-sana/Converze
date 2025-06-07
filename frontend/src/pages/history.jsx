@@ -93,7 +93,7 @@ export default function history() {
                 <div className='navbar-first-div' onClick={() => { navigate("/") }}>
                     {/* <img className='nav-logo' srcSet="/converze.png" alt="" /> */}
                     <span>C</span>
-                    <img className='o-logo' srcSet="/t-logo4.webp" alt="" />
+                    <img className='o-logo' srcSet="/t-logo.avif" alt="" />
                     <span>nverz</span>
                 </div>
 
@@ -168,7 +168,7 @@ export default function history() {
 
                             <>
                                 <div className='no-history'>
-                                    <img srcSet="/notfound1.png" alt="" />
+                                    <img srcSet="/notfound.avif" alt="" />
                                     <p>No History Found!</p>
                                 </div>
                             </>
