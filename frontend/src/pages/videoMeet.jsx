@@ -19,6 +19,10 @@ import TelegramIcon from '@mui/icons-material/Telegram';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import server from '../environment';
+import { useSnackbar } from "notistack";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import Tooltip from '@mui/material/Tooltip';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const server_url = server;
 
@@ -51,6 +55,7 @@ const videoMeetComponent = () => {
     let [meetingCode, setMeetingCode] = useState('');
     const videoRef = useRef([]);
     let [videos, setVideos] = useState([]);
+    const { enqueueSnackbar } = useSnackbar();
 
     // if(isChrome() === false){
 
@@ -58,12 +63,22 @@ const videoMeetComponent = () => {
 
     let routeTo = useNavigate();
 
+    const handleCopyMeetingCode = async () => {
+        try {
+            await navigator.clipboard.writeText(meetingCode);
+            enqueueSnackbar("Meeting code copied!", { variant: "success" });
+        } catch (err) {
+            enqueueSnackbar("Failed to copy meeting code.", { variant: "error" });
+        }
+    };
+
     // To get the permission to access the video, audio and screen sharing hardware. 
     const getPermissions = async () => {
         try {
 
             const videoPermission = await navigator.mediaDevices.getUserMedia({ video: true });
-            // console.log("Video Permit: ", videoPermission);
+            videoPermission.getTracks().forEach(track => track.stop());
+
             if (videoPermission) {
                 setVideoAvailable(true);
             } else {
@@ -71,7 +86,8 @@ const videoMeetComponent = () => {
             }
 
             const audioPermission = await navigator.mediaDevices.getUserMedia({ audio: true });
-            // console.log("Audio Permit: ", audioPermission);
+            audioPermission.getTracks().forEach(track => track.stop());
+
             if (audioPermission) {
                 setAudioAvailable(true);
             } else {
@@ -87,7 +103,6 @@ const videoMeetComponent = () => {
             if (videoAvailable || audioAvailable) {
                 const userMediaStream = await navigator.mediaDevices.getUserMedia({ video: videoAvailable, audio: audioAvailable });
                 // console.log("User Media: ", userMediaStream);
-
                 if (userMediaStream) {
 
                     window.localStream = userMediaStream;
@@ -103,11 +118,9 @@ const videoMeetComponent = () => {
         }
     }
 
-
     useEffect(() => {
         getPermissions();
     }, []);
-
 
     // TODO 
     // This func is responsible for --> If I mute my camera or audio then this func is call to mute camera or audio in the all other computer present in the same socket room. 
@@ -122,7 +135,6 @@ const videoMeetComponent = () => {
 
         window.localStream = stream; // After that new stream was initialized.
         localVideoRef.current.srcObject = stream; // Also ste local video ref into stream. Menas if we stop video then this will not visible anymore.
-
 
         for (let id in connections) { // This 'id' and the 'idto' was same 
 
@@ -140,7 +152,6 @@ const videoMeetComponent = () => {
 
         }
 
-
         stream.getTracks().forEach(track => track.onended = () => {
             setVideo(false);
             setAudio(false);
@@ -154,15 +165,11 @@ const videoMeetComponent = () => {
                 console.error(error);
             }
 
-
             // TODO BlackSilence
-
             let blackSlience = (...args) => new MediaStream([black(...args), silence()]);
             // console.log("Black Slience: ", blackSlience);
             window.localStream = blackSlience();
             localVideoRef.current.srcObject = window.localStream;
-
-
 
             for (let id in connections) {
                 // console.log("Connections ID :", connections[id]);
@@ -178,7 +185,6 @@ const videoMeetComponent = () => {
 
     }
 
-
     let silence = () => {
         let ctx = new AudioContext();
         let oscillator = ctx.createOscillator();
@@ -191,7 +197,6 @@ const videoMeetComponent = () => {
         return Object.assign(dst.stream.getAudioTracks()[0], { enabled: false });
     }
 
-
     let black = ({ width = 640, height = 480 } = {}) => {
         let canvas = Object.assign(document.createElement("canvas"), { width, height });
 
@@ -201,7 +206,6 @@ const videoMeetComponent = () => {
 
         return Object.assign(stream.getVideoTracks()[0], { enabled: false })
     }
-
 
     // If we on off the audio video permission manually then this func handel this.
     let getUserMedia = () => {
@@ -222,13 +226,11 @@ const videoMeetComponent = () => {
         }
     }
 
-
     useEffect(() => {
         if (video !== undefined && audio !== undefined) {
             getUserMedia();
         }
     }, [audio, video]);
-
 
     // TODO
     let gotMessageFromServer = (fromId, message) => {
@@ -257,25 +259,25 @@ const videoMeetComponent = () => {
         }
     }
 
-
     // TODO
-    let addMessage = (data, sender, socketIdSender) => {
+    let addMessage = (data, sender, userId, timeStamp) => {
 
         // console.log("Data: ",data);
         // console.log("Sende: ", sender);
         // console.log("Socket id sender: ", socketIdSender);
-        
+
+        const myUserId = localStorage.getItem("id");
+
         setMessages((prevMessages) => [
             ...prevMessages,
-            { sender: sender, data: data, socketIdSender: socketIdSender }
+            { sender, data, userId, timeStamp }
         ]);
 
-        if (socketIdSender !== socketIdRef.current) {
-            setNewMessages((prevNewMessages) => prevNewMessages + 1)
+        // Increase unread count only if message is from others
+        if (userId !== myUserId) {
+            setNewMessages((prevNewMessages) => prevNewMessages + 1);
         }
-
     }
-
 
     let connectToSocketServer = () => {
         socketRef.current = io.connect(server_url, { secure: false });
@@ -381,7 +383,6 @@ const videoMeetComponent = () => {
         })
     }
 
-
     let getMedia = () => {
         setVideo(videoAvailable);
         setAudio(audioAvailable);
@@ -389,11 +390,41 @@ const videoMeetComponent = () => {
         connectToSocketServer();
     }
 
-
     let connect = () => {
+
+        const trimmedUsername = username.trim();
+
+        // 1️ Empty check
+        if (!trimmedUsername) {
+            enqueueSnackbar("Username is required to join the meeting.", {
+                variant: "error"
+            });
+            return;
+        }
+
+        // 2️ Minimum length check
+        if (trimmedUsername.length < 3) {
+            enqueueSnackbar("Username must be at least 3 characters.", {
+                variant: "warning"
+            });
+            return;
+        }
+
+        // 3 Max length check
+        if (trimmedUsername.length > 25) {
+            enqueueSnackbar("Username cannot exceed 15 characters.", {
+                variant: "warning"
+            });
+            return;
+        }
+
+        // 4️ ave cleaned username
+        setUsername(trimmedUsername);
+        localStorage.setItem("user", trimmedUsername);
+
         setAskForUsername(false);
         getMedia();
-    }
+    };
 
     let handleVideo = () => {
         setVideo(!video);
@@ -404,7 +435,18 @@ const videoMeetComponent = () => {
     }
 
     let sendMessage = () => {
-        socketRef.current.emit("chat-message", message, username);
+
+        // socketRef.current.emit("chat-message", message, username);
+
+        const myUserId = localStorage.getItem("id");
+
+        socketRef.current.emit(
+            "chat-message",
+            message,
+            username,
+            myUserId
+        );
+
         setMessage("");
     }
 
@@ -434,7 +476,6 @@ const videoMeetComponent = () => {
             ])
         }
 
-
         stream.getTracks().forEach(track => track.onended = () => {
             setScreen(false);
 
@@ -444,7 +485,6 @@ const videoMeetComponent = () => {
             } catch (error) {
                 console.error(error);
             }
-
 
             // TODO BlackSilence
 
@@ -456,7 +496,6 @@ const videoMeetComponent = () => {
             getUserMedia();
 
         });
-
 
     }
 
@@ -489,9 +528,9 @@ const videoMeetComponent = () => {
             console.error(error);
         }
 
-        window.location.href = "/home"; // This forces a full page reload
+        //window.location.href = "/home"; // This forces a full page reload
+        routeTo("/home");
     }
-
 
     const chatDisplayRef = useRef(null); // Ref for the chat container
 
@@ -500,6 +539,12 @@ const videoMeetComponent = () => {
             chatDisplayRef.current.scrollTop = chatDisplayRef.current.scrollHeight;
         }
     }, [messages]); // Auto-scroll when messages update
+
+    useEffect(() => {
+        if (showModal && chatDisplayRef.current) {
+            chatDisplayRef.current.scrollTop = chatDisplayRef.current.scrollHeight;
+        }
+    }, [showModal]);
 
     useEffect(() => {
         const code = getMeetingCode();
@@ -513,6 +558,21 @@ const videoMeetComponent = () => {
         // setMeetingCode(parts.length - 1);
     };
 
+    // format the time
+    const formatTime = (timeStamp) => {
+        if (!timeStamp) return "";
+
+        const date = new Date(timeStamp);
+
+        let hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, "0");
+
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12;
+
+        return `${hours}:${minutes} ${ampm}`;
+    };
+
     const MessageBadge = styled(Badge)`
         & .${badgeClasses.badge}{
         top: -15px;
@@ -520,21 +580,74 @@ const videoMeetComponent = () => {
         font-size: 12px;
         background-color: #25d366;}`;
 
+    useEffect(() => {
+        return () => {
+            console.log("Cleaning up meeting...");
+
+            // Stop media tracks
+            if (window.localStream) {
+                window.localStream.getTracks().forEach(track => track.stop());
+                window.localStream = null;
+            }
+
+            // Remove video element stream reference
+            if (localVideoRef.current) {
+                localVideoRef.current.srcObject = null;
+            }
+
+            // Close peer connections
+            for (let id in connections) {
+                try {
+                    connections[id].close();
+                } catch (e) { }
+            }
+            connections = {};
+
+            // Disconnect socket
+            if (socketRef.current) {
+                socketRef.current.disconnect();
+                socketRef.current = null;
+            }
+        };
+    }, []);
+
     return (
         <div>
             {askForUsername === true ?
                 <div className={styles.lobby}>
+
+                    <IconButton
+                        onClick={() => routeTo("/home")}
+                        sx={{
+                            position: "absolute",
+                            top: 20,
+                            left: 20,
+                            zIndex: 10,
+                            color: "#5e49c8",
+                            backgroundColor: "rgba(94, 73, 200, 0.36)",
+                            backdropFilter: "blur(6px)",
+                            // border: "1px solid rgba(94, 73, 200, 0.3)",
+                            "&:hover": {
+                                backgroundColor: "rgba(94, 73, 200, 0.25)",
+                                transform: "scale(1.05)"
+                            },
+                            transition: "all 0.1s ease"
+                        }}
+                    >
+                        <ArrowBackIcon />
+                    </IconButton>
+
                     <div className={styles.leftLobby}>
                         <h2 className={styles.lobbyHeading}>Enter into <span>Lobby</span></h2>
                         <div className={styles.details}>
-                            <TextField 
-                                className={styles.lobbyTextfield} 
-                                id="filled-basic" 
-                                label="Username" 
-                                value={username} 
-                                onChange={e => setUsername(e.target.value)} 
-                                size="small" 
-                                variant="outlined" 
+                            <TextField
+                                className={styles.lobbyTextfield}
+                                id="filled-basic"
+                                label="Username"
+                                value={username}
+                                onChange={e => setUsername(e.target.value)}
+                                size="small"
+                                variant="outlined"
                                 sx={{
                                     "& .MuiOutlinedInput-root": {
                                         "& fieldset": { borderColor: "#5e49c8" }, // Default outline color
@@ -550,15 +663,42 @@ const videoMeetComponent = () => {
                             <Button className={styles.lobbyButton} variant="contained" onClick={connect}>Connect</Button>
                         </div>
 
-                        <div className={styles.meetingCode}>
+                        {/* <div className={styles.meetingCode}>
                             <p>Your Meeting Code: <span>{meetingCode}</span></p>
+                        </div> */}
+
+                        <div className={styles.meetingCode}>
+                            <div>
+                                <span>
+                                    {meetingCode}
+                                </span>
+
+                                <Tooltip title="Copy meeting code">
+                                    <IconButton
+                                        onClick={handleCopyMeetingCode}
+                                        className='codeCopyButton'
+                                        size="small"
+                                        sx={{
+                                            backgroundColor: "rgba(187, 187, 187, 0.56)",   // circle color
+                                            color: "#5e49c8",                        // icon color (purple)
+                                            borderRadius: "3px",
+                                            width: 30,
+                                            height: 30,
+                                            "&:hover": {
+                                                backgroundColor: "rgba(172, 172, 172, 0.82)"   // slightly darker on hover
+                                            }
+                                        }}
+                                    >
+                                        <ContentCopyIcon sx={{ fontSize: 16 }} />
+                                    </IconButton>
+                                </Tooltip>
+                            </div>
                         </div>
 
                     </div>
-                    
 
                     <div className={styles.lobbyVideodiv}>
-                        <video  className={styles.lobbyVideo} ref={localVideoRef} autoPlay muted></video>
+                        <video className={styles.lobbyVideo} ref={localVideoRef} autoPlay muted></video>
                     </div>
 
                 </div>
@@ -573,19 +713,39 @@ const videoMeetComponent = () => {
                             <div className={styles.chatContainer}>
                                 <div className={styles.chatHead}>
                                     <h2>Converze</h2>
-                                    <TelegramIcon/>
+                                    <TelegramIcon />
                                 </div>
 
                                 <div className={styles.chatDisplay} ref={chatDisplayRef}>
 
+                                    <div style={{ marginTop: "auto" }} />
+
                                     {messages.length !== 0 ? messages.map((item, index) => {
-                                        const isSender = item.socketIdSender === socketIdRef.current;
+
+                                        const myUserId = localStorage.getItem("id");
+                                        const isSender = item.userId === myUserId;
+
                                         return (
-                                            <div className={`${styles.chats} ${isSender ? styles.sender : styles.receiver}`} key={index}>
-                                                <p className={styles.senderName}>{item.sender}</p>
-                                                <p className={styles.data}>{item.data}</p>
+                                            <div
+                                                className={`${styles.messageRow} ${isSender ? styles.myRow : styles.otherRow}`}
+                                                key={index}
+                                            >
+                                                <div className={`${styles.bubble} ${isSender ? styles.myBubble : styles.otherBubble}`}>
+
+                                                    {!isSender && (
+                                                        <div className={styles.username}>{item.sender}</div>
+                                                    )}
+
+                                                    <div className={styles.messageText}>{item.data}</div>
+
+                                                    <div className={styles.timestamp}>
+                                                        {formatTime(item.timeStamp)}
+                                                    </div>
+
+                                                </div>
                                             </div>
                                         );
+
                                     }) : (
                                         <div className={styles.noMessage}>
                                             <p>No Messages Yet</p>
@@ -595,14 +755,14 @@ const videoMeetComponent = () => {
                                 </div>
 
                                 <div className={styles.chattingTextfield}>
-                                    <TextField 
-                                        fullWidth 
-                                        value={message} 
-                                        onChange={(e) => setMessage(e.target.value)} 
-                                        id="fullWidth" 
-                                        size="small" 
-                                        label="Enter your chat..." 
-                                        variant="filled" 
+                                    <TextField
+                                        fullWidth
+                                        value={message}
+                                        onChange={(e) => setMessage(e.target.value)}
+                                        id="fullWidth"
+                                        size="small"
+                                        label="Enter your chat..."
+                                        variant="filled"
                                         className={styles.chatField}
                                         InputLabelProps={{
                                             sx: {
@@ -617,6 +777,13 @@ const videoMeetComponent = () => {
                                                 "&:after": { borderBottomColor: "#624ccc" }   // Focused border color
                                             }
                                         }}
+
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter" && message.trim() !== "") {
+                                                e.preventDefault();   // Prevent form submit / newline
+                                                sendMessage();
+                                            }
+                                        }}
                                     />
                                     <Button onClick={sendMessage} disabled={message.trim() === ""} variant="contained" size="medium">Send</Button>
                                 </div>
@@ -627,7 +794,6 @@ const videoMeetComponent = () => {
 
                         <></>
                     }
-
 
                     <div className={styles.buttonContainer}>
                         <IconButton onClick={handleVideo}>
@@ -654,7 +820,6 @@ const videoMeetComponent = () => {
                         </IconButton>
                         {/* </Badge> */}
                     </div>
-
 
                     <video className={styles.userMeetingVideo} ref={localVideoRef} autoPlay muted></video>
                     <div className={styles.conferenceView}>

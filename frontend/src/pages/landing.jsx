@@ -6,8 +6,24 @@ export default function landing() {
   const router = useNavigate();
   let [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
 
+  function meetingCodeGenerator() {
+    const chars = "abcdefghijkmnopqrstuvwxyz123456789";
+
+    const randomPart = (length) => {
+      let result = "";
+      for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    };
+
+    const code = `${randomPart(6)}-${randomPart(6)}-${randomPart(6)}`;
+
+    return code;
+  }
+
   const handleGuest = () => {
-    const randomHref = Math.random().toString(36).substr(2, 10); //Converts a random number to a base-36 string (letters + numbers) and substr(2, 10): Removes the "0." at the start and keeps 10 random characters.
+    const randomHref = meetingCodeGenerator(); 
     router(`/${randomHref}`);
   }
 

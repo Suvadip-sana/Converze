@@ -46,7 +46,6 @@ export default function history() {
 
     }, []);
 
-
     const deleteHistory = async () => {
         try {
             const result = await clearHistory();
@@ -65,7 +64,6 @@ export default function history() {
         }
     }
 
-
     let formatDate = (dateStr) => {
 
         const date = new Date(dateStr);
@@ -83,9 +81,7 @@ export default function history() {
         const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes} ${ampm}`;
 
         return { formattedDate, formattedTime };
-
     }
-
 
     return (
         <>
@@ -125,7 +121,6 @@ export default function history() {
 
                                 <Card key={indx} variant="outlined" className='his-card'>
 
-
                                     <CardContent className='his-box'>
                                         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                                             Meeting Code: <span>{element.meetingcode}</span>
@@ -159,7 +154,6 @@ export default function history() {
 
                                     </CardContent>
 
-
                                 </Card>
                             )
                         })
@@ -168,7 +162,7 @@ export default function history() {
 
                             <>
                                 <div className='no-history'>
-                                    <img srcSet="/notfound.avif" alt="" />
+                                    <img srcSet="/notfound5.avif" alt="" />
                                     <p>No History Found!</p>
                                 </div>
                             </>

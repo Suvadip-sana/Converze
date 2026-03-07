@@ -1,26 +1,24 @@
 import React, { useContext, useState } from 'react'
 import withAuth from '../utils/withAuth';
 import { useNavigate } from 'react-router-dom';
-// import { IconButton } from '@mui/material';
 import RestoreIcon from '@mui/icons-material/Restore';
 import Button from '@mui/material/Button';
 import { TextField } from '@mui/material';
 import { useSnackbar } from 'notistack'; // Import Notistack
 import { Authcontext } from '../contexts/Authcontext';
-// import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowBackIcon from '@mui/icons-material/ChevronLeftRounded';
 import IconButton from '@mui/material/IconButton';
-
-
-
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import InputAdornment from '@mui/material/InputAdornment';
+import Tooltip from '@mui/material/Tooltip';
 
 function homeComponent() {
 
     const [meetingCode, setMeetingCode] = useState("");
+    const [generatedCode, setGeneratedCode] = useState("");
     const { enqueueSnackbar } = useSnackbar(); // Get snackbar function
 
     let navigate = useNavigate();
-
 
     const { addToUserHistory } = useContext(Authcontext);
 
@@ -30,8 +28,8 @@ function homeComponent() {
             return enqueueSnackbar("Please enter meeting code to join meeting!", { variant: "error" });
         }
 
-        if (meetingCode.length > 15) {
-            return enqueueSnackbar("Meeting code cannot exceed 15 characters!", { variant: "error" });
+        if (meetingCode.length > 20) {
+            return enqueueSnackbar("Meeting code cannot exceed 20 characters!", { variant: "warning" });
         }
 
         try {
@@ -49,6 +47,27 @@ function homeComponent() {
         navigate(`/${meetingCode}`);
     }
 
+    function meetingCodeGenerator() {
+        const chars = "abcdefghijkmnopqrstuvwxyz123456789";
+
+        const randomPart = (length) => {
+            let result = "";
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        };
+
+        const code = `${randomPart(6)}-${randomPart(6)}-${randomPart(6)}`;
+
+        return code;
+    }
+
+    const generateMeetingCode = () => {
+        const randomCode = meetingCodeGenerator();
+        setGeneratedCode(randomCode);     // Show below
+        setMeetingCode(randomCode);       // Auto-fill input
+    };
 
     return (
         <>
@@ -88,7 +107,8 @@ function homeComponent() {
                     <div className='left-side-inner-div'>
                         <span className='bbbb'>Providing</span><h2> Quality Video Call</h2>
                         <div className="left-inner-div">
-                            <TextField
+                            {/* <TextField
+                                value={meetingCode}
                                 onChange={e => setMeetingCode(e.target.value)}
                                 label="Enter meeting code"
                                 variant="filled"
@@ -105,9 +125,56 @@ function homeComponent() {
                                         "&:after": { borderBottomColor: "#5e49c8" }   // Focused border color
                                     }
                                 }}
-                            ></TextField>
-                            <Button onClick={handleJoinVideoCall} variant='contained' size='small'>Join call</Button>
+                            ></TextField> */}
+
+                            <TextField
+                                value={meetingCode}
+                                onChange={e => setMeetingCode(e.target.value)}
+                                label="Enter meeting code"
+                                variant="filled"
+                                size="small"
+                                className='codeInput'
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <Tooltip title="Generate code">
+                                                <IconButton
+                                                    onClick={generateMeetingCode}
+                                                    size="small"
+                                                    sx={{
+                                                        backgroundColor: "rgba(219, 219, 219, 0.83)",   // circle color
+                                                        color: "#5e49c8",                        // icon color (purple)
+                                                        borderRadius: "50%",
+                                                        width: 36,
+                                                        height: 36,
+                                                        "&:hover": {
+                                                            backgroundColor: "rgba(185, 185, 185, 0.83)"   // slightly darker on hover
+                                                        }
+                                                    }}
+
+                                                >
+                                                    <AutoAwesomeIcon fontSize="small" />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </InputAdornment>
+                                    ),
+                                    sx: {
+                                        "&:after": { borderBottomColor: "#5e49c8" }
+                                    }
+                                }}
+                            />
+
+                            <Button
+                                className='joinCallButton'
+                                onClick={handleJoinVideoCall}
+                                variant='contained'
+                                size='small'
+                            >
+                                Join call
+                            </Button>
+
                         </div>
+
                     </div>
                 </div>
 
@@ -119,6 +186,5 @@ function homeComponent() {
         </>
     )
 }
-
 
 export default withAuth(homeComponent);
