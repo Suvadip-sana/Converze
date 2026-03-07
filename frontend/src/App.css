@@ -61,15 +61,12 @@
     content: '';
     position: absolute;
     top: 4px;
-    /* left: -5px; */
     width: 0%;
     height: 100%;
     border-bottom: 3px solid #b29dff;
     transition: all .3s linear;
 }
-/* .landing-page-container nav .nav-lists p:hover:before{
-    width: 100%;
-} */
+
 .landing-page-container nav 
 .nav-lists .login-btn{
     background: linear-gradient(to top left, #9274fd, #5e49c8);
@@ -88,11 +85,7 @@
     border: 1px solid #b29dff;
     color: #b29dff !important;
 }
-/* .landing-page-container nav 
-.nav-lists 
-.login-btn p{
-    color: #5e49c8;
-} */
+
 .landing-page-container nav 
 .nav-lists p:hover{
     color: #b29dff;
@@ -135,8 +128,6 @@
 .landing-main-container .right img{
     height: 65vh;
     width: auto;
-    /* box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.3); */
-    /* filter: drop-shadow(0px 20px 30px rgb(43, 35, 87)); */
     filter: drop-shadow(0px 20px 30px rgba(39, 28, 57, 0.925));
     animation: float 5s ease-in-out infinite;
 }
@@ -147,12 +138,6 @@
     background-color: #9274fd !important;
 }
 .close-button-style{
-    /* background: 'transparent',
-  border: 'none',
-  color: 'white',
-  fontSize: '16px',
-  cursor: 'pointer',
-  marginLeft: '10px', */
   background: transparent;
   border: none;
   color: white;
@@ -187,21 +172,17 @@
 }
 .history-navbar .history-home 
 .home-btn:hover{
-    /* background: #cccccc; */
     background: linear-gradient(to bottom right, #cabbff, #705fb7);
     color: white;
-    /* color:#5e49c8; */
 }
 .display-his{
     display: flex;
     align-items: center;
     justify-content: center;
-    /* margin-top: 5rem; */
     margin-block: 5rem;
-    /* width: 100vw; */
 }
 .display-his .inner-div{
-    width: 50%;
+    width: 55%;
     min-height: 70%;
     display: inline-flex;    
     flex-direction: column;
@@ -210,7 +191,7 @@
     text-align: center;
 }
 .display-his .inner-div .no-history img {
-    width: 30vw;
+    width: 18vw;
     height: auto;
 }
 .display-his .inner-div .no-history p{
@@ -328,7 +309,7 @@
 }
 .meet-container 
 .left-side-panel 
-.left-inner-div button{
+.left-inner-div .joinCallButton{
     background: linear-gradient(to top left, #a288ff, #5e49c8);
 }
 .meet-container 
@@ -346,6 +327,11 @@
     color: rgb(117, 117, 117) !important;
     font-size: 2rem;
     font-weight: 700;
+}
+
+.generaeCode{
+    display: flex;
+    flex-direction: row;
 }
 @media(max-width: 900px){
     .meet-container{
@@ -409,6 +395,12 @@
     .landing-page-container .landing-main-container .started-btn p{
         font-size: 1.2rem;
     }
+        .display-his .inner-div {
+            width: 90%;
+            min-height: 70%;
+            display: inline-flex;
+            flex-direction: column;
+        }
 }
 @media(max-width: 515px){
     .navbar{
