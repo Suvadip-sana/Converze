@@ -85,6 +85,10 @@ const addToHistory = async (req, res) => {
     try {
         const user = await User.findOne({token: token});
 
+        if(!user){
+            return res.status(401).json({message: "User not found or invalid token"});
+        }
+        
         const newMeeting = new Meeting({
             userid: user.username,
             meetingcode: meetingcode

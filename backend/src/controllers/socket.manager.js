@@ -65,9 +65,12 @@ export const connectToSocket = (server) => {
 
             if(messages[path] !== undefined){
                 for(let a = 0; a < messages[path].length; ++a){
-                    io.to(socket.id).emit("chat-message", messages[path][a]['data'],
-                        messages[path][a]['sender'], 
-                        messages[path][a]['socket-id-sender']) // We consider 'socket-id-sender' because of to detect from where the message is comming.
+                    io.to(socket.id).emit("chat-message", 
+                        messages[path][a].data,
+                        messages[path][a].sender, 
+                        messages[path][a].userId, // We consider 'user-id' of the sender because of to detect from where the message is comming.
+                        messages[path][a].timeStamp // Now rejoin user also receive time stamp
+                    ); 
                 }
             }
 
@@ -78,7 +81,7 @@ export const connectToSocket = (server) => {
             io.to(toId).emit("signal", socket.id, message);
         });
 
-        socket.on("chat-message", (data, sender) =>{
+        socket.on("chat-message", (data, sender, userId) =>{
 
             const[matchingRoom, found] = Object.entries(connections).reduce(([room, isFound], [roomKey, roomValue]) => {
 
@@ -96,12 +99,20 @@ export const connectToSocket = (server) => {
                     messages[matchingRoom] = []
                 }
 
+                const timeStamp = new Date().toISOString();
+
                 //Add the new message to the room's message history.
-                messages[matchingRoom].push({'sender': sender, 'data': data, 'socket-id-sender': socket.id}) // Here the socket id sender and the obove inside "join-call" the 'socket-id-seender' is same. This is important.
+                messages[matchingRoom].push({
+                    sender,
+                    data,
+                    userId,
+                    timeStamp // Add timestamp when message is created so that time can be shown with each and every tab
+
+                }) // Here the socket id sender and the obove inside "join-call" the 'socket-id-seender' is same. This is important.
 
                 // Broadcast the message to all users in the room. Include the socket id sender for identification
                 connections[matchingRoom].forEach((element) => {
-                    io.to(element).emit("chat-message", data, sender, socket.id);
+                    io.to(element).emit("chat-message", data, sender, userId, timeStamp); // emit with time stamp
                 })
             }
 
